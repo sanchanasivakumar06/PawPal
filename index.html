@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PawPal — Pet Care & Wellness Manager</title>
+  <meta name="description" content="PawPal is a mobile-first pet care companion for tracking feeding schedules, vaccinations, health records, daily routines, and vet appointments.">
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🐾</text></svg>">
+</head>
+<body>
+
+  <!-- Master Top Utility Bar -->
+  <header class="master-top-bar">
+    <div class="brand-badge">
+      <div class="brand-icon-wrapper">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+          <circle cx="6.5" cy="8.5" r="2.5"/>
+          <circle cx="17.5" cy="8.5" r="2.5"/>
+          <circle cx="10" cy="4.5" r="2.5"/>
+          <circle cx="14" cy="4.5" r="2.5"/>
+          <path d="M12 11c-3.3 0-6 2.2-6 5.5 0 2.2 1.8 3.5 4 3.5 1 0 1.6-.3 2-.7.4.4 1 .7 2 .7 2.2 0 4-1.3 4-3.5 0-3.3-2.7-5.5-6-5.5z"/>
+        </svg>
+      </div>
+      <span>PawPal</span>
+      <span class="brand-tag">Lab Edition</span>
+    </div>
+
+    <div class="top-bar-controls">
+      <button id="btn-toggle-view" class="top-btn" title="Toggle Phone Frame vs Full Web View">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
+        <span id="view-mode-label">Desktop View</span>
+      </button>
+
+      <button id="btn-test-chime" class="top-btn" title="Test notification alert and chime sound">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+        <span>Test Alert</span>
+      </button>
+
+      <button id="btn-emergency-call" class="top-btn emergency-pulse" title="Quick Emergency Vet Hotline">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        <span>Emergency Vet</span>
+      </button>
+
+      <button id="btn-theme-toggle" class="icon-btn" title="Toggle Light / Dark theme">
+        <svg id="theme-icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        <svg id="theme-icon-sun" style="display:none;" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- App Body Container -->
+  <main class="main-wrapper">
+    <div id="viewport-frame" class="viewport-device-frame">
+      
+      <!-- Phone Simulation Status Bar -->
+      <div class="phone-status-bar">
+        <span class="status-time" id="status-clock">09:41</span>
+        <div class="status-notch"></div>
+        <div class="status-icons">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 3c-4.97 0-9 4.03-9 9 0 2.12.74 4.07 1.97 5.61L4.35 19H19.65l-.62-1.39C20.26 16.07 21 14.12 21 12c0-4.97-4.03-9-9-9z"/></svg>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M2 17h20v2H2zm1.15-4.05L4 11.47l.85 1.48 1.3-.75-.85-1.48H7v-1.5H5.3l.85-1.48-1.3-.75L4 8.47 3.15 7l-1.3.75.85 1.48H1v1.5h1.7l-.85 1.48 1.3.75z"/></svg>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><rect x="2" y="7" width="18" height="10" rx="2" ry="2"/><line x1="22" y1="11" x2="22" y2="13"/></svg>
+        </div>
+      </div>
+
+      <!-- In-App Header & Active Pet Switcher -->
+      <div class="app-header">
+        <div id="active-pet-chip" class="active-pet-chip" title="Click to switch pet or manage profiles">
+          <div class="pet-avatar-mini" id="header-pet-avatar">
+            <!-- Injected by JS -->
+          </div>
+          <div class="active-pet-info">
+            <span class="active-pet-name" id="header-pet-name">Luna</span>
+            <span class="active-pet-sub" id="header-pet-species">Dog • Golden Retriever</span>
+          </div>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>
+
+        <div class="header-actions">
+          <button id="btn-quick-add" class="icon-btn" title="Add New Item">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Scrollable App Content Viewport -->
+      <div class="app-content">
+
+        <!-- ========================================== -->
+        <!-- TAB 1: DASHBOARD                           -->
+        <!-- ========================================== -->
+        <section id="tab-dashboard" class="tab-content active">
+          <!-- Pet Hero Banner -->
+          <div class="pet-hero-card">
+            <div class="pet-hero-avatar" id="hero-avatar"></div>
+            <div class="pet-hero-details">
+              <h2 id="hero-pet-name">Luna</h2>
+              <div class="pet-tags">
+                <span class="tag-badge primary" id="hero-breed">Golden Retriever</span>
+                <span class="tag-badge" id="hero-age">2 yrs 4 mos</span>
+                <span class="tag-badge" id="hero-weight">28.5 kg</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Quick Metrics Grid -->
+          <div class="metrics-grid">
+            <div class="metric-pill">
+              <div class="metric-label">Meals Today</div>
+              <div class="metric-value" id="metric-meals-count">3 Scheduled</div>
+            </div>
+            <div class="metric-pill">
+              <div class="metric-label">Next Vaccine</div>
+              <div class="metric-value" id="metric-vaccine-due">Apr 2027</div>
+            </div>
+            <div class="metric-pill">
+              <div class="metric-label">Care Score</div>
+              <div class="metric-value" id="metric-care-score">100%</div>
+            </div>
+          </div>
+
+          <!-- Today's Routine Checklist Progress -->
+          <div class="card daily-progress-container">
+            <div class="progress-header">
+              <span>Today's Care Routine</span>
+              <span id="routine-progress-text">2 of 3 Done</span>
+            </div>
+            <div class="progress-bar-bg">
+              <div class="progress-bar-fill" id="routine-progress-fill" style="width: 66%;"></div>
+            </div>
+          </div>
+
+          <!-- Next Upcoming Reminder -->
+          <div class="section-header">
+            <span class="section-title">Today's Next Reminder</span>
+            <button class="btn btn-sm btn-secondary" onclick="window.PawPalApp.switchTab('feeding')">View All</button>
+          </div>
+          <div id="dashboard-next-reminder-card">
+            <!-- Injected by JS -->
+          </div>
+
+          <!-- Recent Activity Log -->
+          <div class="section-header" style="margin-top: 18px;">
+            <span class="section-title">Recent Care Activity</span>
+            <button class="btn btn-sm btn-secondary" onclick="window.PawPalApp.switchTab('history')">History</button>
+          </div>
+          <div id="dashboard-recent-activity">
+            <!-- Injected by JS -->
+          </div>
+
+          <!-- Emergency Vet Direct Access Card -->
+          <div class="card" style="border-left: 4px solid var(--danger); margin-top: 20px;">
+            <div class="card-header">
+              <div class="card-title" style="color: var(--danger);">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+                Emergency Vet Contact
+              </div>
+              <button class="btn btn-sm btn-danger" id="btn-call-emergency-vet">Call Now</button>
+            </div>
+            <div class="card-subtitle" id="dash-emergency-name">Riverdale 24/7 Emergency Pet Hospital</div>
+            <div style="font-size: 0.8rem; margin-top: 4px; color: var(--text-muted);" id="dash-emergency-phone">+1 (555) 911-7387</div>
+          </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- TAB 2: PETS LIST & PROFILES                -->
+        <!-- ========================================== -->
+        <section id="tab-pets" class="tab-content">
+          <div class="section-header">
+            <span class="section-title">My Pets</span>
+            <button class="btn btn-sm btn-primary" id="btn-open-add-pet">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              Add Pet
+            </button>
+          </div>
+
+          <div id="pets-list-container">
+            <!-- Injected by JS -->
+          </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- TAB 3: FEEDING SCHEDULE                    -->
+        <!-- ========================================== -->
+        <section id="tab-feeding" class="tab-content">
+          <div class="section-header">
+            <div>
+              <span class="section-title">Feeding Schedule</span>
+              <div class="card-subtitle">Automated daily meal reminders</div>
+            </div>
+            <button class="btn btn-sm btn-primary" id="btn-open-add-feeding">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              Add Meal
+            </button>
+          </div>
+
+          <div id="feeding-list-container">
+            <!-- Injected by JS -->
+          </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- TAB 4: HEALTH & VACCINATIONS               -->
+        <!-- ========================================== -->
+        <section id="tab-health" class="tab-content">
+          <!-- Mandatory Medical Disclaimer -->
+          <div class="medical-disclaimer">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            <div>
+              <strong>Medical Disclaimer:</strong> Records and reminders are for personal organization only. Always consult your certified veterinarian for professional diagnosis and medical advice.
+            </div>
+          </div>
+
+          <div class="section-header">
+            <span class="section-title">Health Records</span>
+            <div style="display:flex; gap:6px;">
+              <button class="btn btn-sm btn-secondary" id="btn-export-health-pdf" title="Export printable health passport">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                Export
+              </button>
+              <button class="btn btn-sm btn-primary" id="btn-open-add-health">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                Add Record
+              </button>
+            </div>
+          </div>
+
+          <!-- Category Filter Chips -->
+          <div class="chip-group" id="health-filter-chips">
+            <button class="filter-chip active" data-filter="all">All Records</button>
+            <button class="filter-chip" data-filter="vaccination">Vaccinations</button>
+            <button class="filter-chip" data-filter="medication">Medications</button>
+            <button class="filter-chip" data-filter="vet_visit">Vet Visits</button>
+          </div>
+
+          <div id="health-records-container">
+            <!-- Injected by JS -->
+          </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- TAB 5: DAILY CARE CHECKLIST                -->
+        <!-- ========================================== -->
+        <section id="tab-daily" class="tab-content">
+          <div class="section-header">
+            <div>
+              <span class="section-title">Daily Care Checklist</span>
+              <div class="card-subtitle">Mark activities completed today</div>
+            </div>
+            <button class="btn btn-sm btn-secondary" id="btn-quick-log-custom">Log Custom</button>
+          </div>
+
+          <div class="card" id="daily-checklist-container">
+            <!-- Injected by JS with interactive checkmarks -->
+          </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- TAB 6: CARE HISTORY & CALENDAR             -->
+        <!-- ========================================== -->
+        <section id="tab-history" class="tab-content">
+          <div class="section-header">
+            <span class="section-title">Monthly Care Calendar</span>
+            <div class="card-subtitle" id="cal-month-title">October 2026</div>
+          </div>
+
+          <!-- Interactive Calendar Widget -->
+          <div class="calendar-widget">
+            <div class="calendar-header">
+              <button class="calendar-nav-btn" id="cal-prev-btn">&lt;</button>
+              <span id="cal-display-label">October 2026</span>
+              <button class="calendar-nav-btn" id="cal-next-btn">&gt;</button>
+            </div>
+            <div class="calendar-days-row">
+              <span>Su</span><span>Mo</span><span>Tu</span><span>We</span><span>Th</span><span>Fr</span><span>Sa</span>
+            </div>
+            <div class="calendar-grid" id="calendar-days-grid">
+              <!-- Injected by JS -->
+            </div>
+          </div>
+
+          <!-- Activity Timeline for Selected Date -->
+          <div class="section-header">
+            <span class="section-title" id="timeline-date-title">Care Timeline</span>
+          </div>
+
+          <div class="timeline-list" id="timeline-container">
+            <!-- Injected by JS -->
+          </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- TAB 7: NEARBY VETS FINDER                  -->
+        <!-- ========================================== -->
+        <section id="tab-vets" class="tab-content">
+          <div class="section-header">
+            <div>
+              <span class="section-title">Nearby Vet Clinics</span>
+              <div class="card-subtitle">Simulated Retrofit API / Clinic Directory</div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <input type="text" id="vet-search-input" class="form-input" placeholder="Search by clinic name, service, or emergency...">
+          </div>
+
+          <div class="chip-group" id="vet-filter-chips">
+            <button class="filter-chip active" data-vet-filter="all">All Clinics</button>
+            <button class="filter-chip" data-vet-filter="emergency">24/7 Emergency Only</button>
+            <button class="filter-chip" data-vet-filter="nearby">Within 2 Miles</button>
+          </div>
+
+          <div id="vets-list-container">
+            <!-- Injected by JS -->
+          </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- TAB 8: SETTINGS & LAB BLUEPRINT            -->
+        <!-- ========================================== -->
+        <section id="tab-settings" class="tab-content">
+          <div class="section-header">
+            <span class="section-title">Preferences & Settings</span>
+          </div>
+
+          <!-- SharedPreferences UI -->
+          <div class="card">
+            <div class="item-card" style="border:none; padding: 4px 0; margin-bottom: 8px;">
+              <div class="item-info">
+                <div class="item-primary-text">Push & Alarm Reminders</div>
+                <div class="item-secondary-text">BroadcastReceiver & Alarm notifications</div>
+              </div>
+              <label class="switch">
+                <input type="checkbox" id="setting-notifications-toggle" checked>
+                <span class="slider"></span>
+              </label>
+            </div>
+
+            <div class="item-card" style="border:none; padding: 4px 0; margin-bottom: 8px;">
+              <div class="item-info">
+                <div class="item-primary-text">Reminder Audio Chime</div>
+                <div class="item-secondary-text">Play gentle sound alert at meal times</div>
+              </div>
+              <label class="switch">
+                <input type="checkbox" id="setting-sound-toggle" checked>
+                <span class="slider"></span>
+              </label>
+            </div>
+
+            <div class="form-group" style="margin-top: 10px;">
+              <label class="form-label">Reminder Lead Time</label>
+              <select id="setting-lead-time" class="form-select">
+                <option value="0">Exactly on time</option>
+                <option value="15" selected>15 minutes before</option>
+                <option value="30">30 minutes before</option>
+                <option value="60">1 hour before</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Emergency Vet Settings -->
+          <div class="card">
+            <div class="card-title" style="margin-bottom: 10px;">Emergency Clinic Contact</div>
+            <div class="form-group">
+              <label class="form-label">Hospital Name</label>
+              <input type="text" id="setting-vet-name" class="form-input">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Emergency Phone Number</label>
+              <input type="text" id="setting-vet-phone" class="form-input">
+            </div>
+            <button class="btn btn-sm btn-secondary" id="btn-save-emergency-settings">Save Emergency Contact</button>
+          </div>
+
+          <!-- Data Backup & Lab Tools -->
+          <div class="card">
+            <div class="card-title" style="margin-bottom: 10px;">Database Operations (SQLite)</div>
+            <div style="display:flex; flex-direction:column; gap:10px;">
+              <button class="btn btn-secondary btn-block" id="btn-export-backup">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                Export Database JSON Backup
+              </button>
+              <button class="btn btn-secondary btn-block" id="btn-reset-demo-data">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+                Reset to Sample Pets & Records
+              </button>
+            </div>
+          </div>
+
+          <!-- Android Lab Syllabus Blueprint Access -->
+          <div class="card" style="background: linear-gradient(135deg, var(--bg-surface), var(--primary-light)); border-color: var(--primary);">
+            <div class="card-title" style="color: var(--primary); margin-bottom: 6px;">
+              🎓 Android Lab Project Blueprint
+            </div>
+            <p style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 12px;">
+              Ready to convert to native Android Studio Java app? View complete package tree, SQLite schema, DAOs, Activities, and viva questions.
+            </p>
+            <button class="btn btn-primary btn-block" id="btn-view-android-blueprint">
+              Open Android Lab Architecture Guide
+            </button>
+          </div>
+        </section>
+
+      </div>
+
+      <!-- Bottom Navigation Bar -->
+      <nav class="bottom-nav">
+        <button class="nav-item active" data-tab="dashboard">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+          <span>Home</span>
+        </button>
+        <button class="nav-item" data-tab="pets">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="5"/><path d="M20 21a8 8 0 1 0-16 0"/></svg>
+          <span>Pets</span>
+        </button>
+        <button class="nav-item" data-tab="feeding">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          <span>Feeding</span>
+        </button>
+        <button class="nav-item" data-tab="health">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+          <span>Health</span>
+        </button>
+        <button class="nav-item" data-tab="daily">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+          <span>Routine</span>
+        </button>
+        <button class="nav-item" data-tab="history">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          <span>Calendar</span>
+        </button>
+        <button class="nav-item" data-tab="vets">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          <span>Vets</span>
+        </button>
+        <button class="nav-item" data-tab="settings">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+          <span>More</span>
+        </button>
+      </nav>
+
+    </div>
+  </main>
+
+  <!-- ========================================== -->
+  <!-- MODAL: ADD / EDIT PET                      -->
+  <!-- ========================================== -->
+  <div id="modal-pet" class="modal-overlay">
+    <div class="modal-window">
+      <div class="modal-header">
+        <h3 class="modal-title" id="modal-pet-title">Add Pet Profile</h3>
+        <button class="icon-btn modal-close-btn">&times;</button>
+      </div>
+      <form id="form-pet">
+        <div class="modal-body">
+          <input type="hidden" id="pet-form-id">
+          
+          <div class="form-group">
+            <label class="form-label">Choose Avatar or Upload Photo</label>
+            <div class="avatar-selector" id="pet-avatar-picker">
+              <!-- Injected by JS -->
+            </div>
+            <div style="margin-top: 6px;">
+              <input type="file" id="pet-photo-file" accept="image/*" style="font-size: 0.8rem;">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Pet Name *</label>
+            <input type="text" id="pet-name" class="form-input" placeholder="e.g. Luna" required>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+            <div class="form-group">
+              <label class="form-label">Species *</label>
+              <select id="pet-species" class="form-select" required>
+                <option value="Dog">Dog</option>
+                <option value="Cat">Cat</option>
+                <option value="Bird">Bird</option>
+                <option value="Rabbit">Rabbit</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Breed</label>
+              <input type="text" id="pet-breed" class="form-input" placeholder="e.g. Golden Retriever">
+            </div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+            <div class="form-group">
+              <label class="form-label">Age</label>
+              <input type="text" id="pet-age" class="form-input" placeholder="e.g. 2 yrs 4 mos">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Weight (kg)</label>
+              <input type="number" step="0.01" id="pet-weight" class="form-input" placeholder="e.g. 28.5">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Care Notes & Dietary Allergies</label>
+            <textarea id="pet-notes" class="form-textarea" rows="3" placeholder="Special preferences, allergies, temperament notes..."></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary modal-close-btn">Cancel</button>
+          <button type="submit" class="btn btn-primary" id="btn-save-pet">Save Pet</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- MODAL: ADD / EDIT FEEDING SCHEDULE         -->
+  <!-- ========================================== -->
+  <div id="modal-feeding" class="modal-overlay">
+    <div class="modal-window">
+      <div class="modal-header">
+        <h3 class="modal-title" id="modal-feeding-title">Add Meal Time</h3>
+        <button class="icon-btn modal-close-btn">&times;</button>
+      </div>
+      <form id="form-feeding">
+        <div class="modal-body">
+          <input type="hidden" id="feeding-form-id">
+          
+          <div class="form-group">
+            <label class="form-label">Select Pet *</label>
+            <select id="feeding-pet-select" class="form-select" required>
+              <!-- Injected by JS -->
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Meal Name *</label>
+            <input type="text" id="feeding-meal-name" class="form-input" placeholder="e.g. Morning Kibble, Dinner" required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Feeding Time *</label>
+            <input type="time" id="feeding-time" class="form-input" required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Portion & Instructions</label>
+            <textarea id="feeding-instructions" class="form-textarea" rows="2" placeholder="e.g. 1.5 cups salmon recipe + fish oil pump"></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary modal-close-btn">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save Meal</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- MODAL: ADD / EDIT HEALTH RECORD            -->
+  <!-- ========================================== -->
+  <div id="modal-health" class="modal-overlay">
+    <div class="modal-window">
+      <div class="modal-header">
+        <h3 class="modal-title" id="modal-health-title">Add Health Record</h3>
+        <button class="icon-btn modal-close-btn">&times;</button>
+      </div>
+      <form id="form-health">
+        <div class="modal-body">
+          <input type="hidden" id="health-form-id">
+
+          <div class="form-group">
+            <label class="form-label">Select Pet *</label>
+            <select id="health-pet-select" class="form-select" required>
+              <!-- Injected by JS -->
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Record Type *</label>
+            <select id="health-type" class="form-select" required>
+              <option value="vaccination">Vaccination</option>
+              <option value="medication">Medication</option>
+              <option value="vet_visit">Vet Visit / Checkup</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Record Title *</label>
+            <input type="text" id="health-title" class="form-input" placeholder="e.g. Rabies Booster, Simparica Trio" required>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+            <div class="form-group">
+              <label class="form-label">Date Administered *</label>
+              <input type="date" id="health-date" class="form-input" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Next Due Date</label>
+              <input type="date" id="health-next-due" class="form-input">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Doctor / Clinic Name</label>
+            <input type="text" id="health-clinic" class="form-input" placeholder="e.g. Oakwood Companion Clinic">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Notes & Dosage Details</label>
+            <textarea id="health-notes" class="form-textarea" rows="2" placeholder="Batch numbers, reaction observations, instructions..."></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary modal-close-btn">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save Record</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- MODAL: QUICK LOG CUSTOM ACTIVITY           -->
+  <!-- ========================================== -->
+  <div id="modal-custom-log" class="modal-overlay">
+    <div class="modal-window">
+      <div class="modal-header">
+        <h3 class="modal-title">Log Care Activity</h3>
+        <button class="icon-btn modal-close-btn">&times;</button>
+      </div>
+      <form id="form-custom-log">
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="form-label">Activity Type *</label>
+            <select id="log-activity-type" class="form-select" required>
+              <option value="feeding">Feeding / Meal</option>
+              <option value="grooming">Grooming & Brushing</option>
+              <option value="walk">Walk / Exercise</option>
+              <option value="medication">Medication Given</option>
+              <option value="water">Fresh Water Refill</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Notes / Details</label>
+            <textarea id="log-notes" class="form-textarea" rows="2" placeholder="e.g. 45 min fetch at park, ate full bowl"></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary modal-close-btn">Cancel</button>
+          <button type="submit" class="btn btn-primary">Record Activity</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- MODAL: ANDROID LAB ARCHITECTURE BLUEPRINT  -->
+  <!-- ========================================== -->
+  <div id="modal-blueprint" class="modal-overlay">
+    <div class="modal-window" style="max-width: 720px;">
+      <div class="modal-header">
+        <h3 class="modal-title">PawPal Android Lab Blueprint & Viva Guide</h3>
+        <button class="icon-btn modal-close-btn">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 14px;">
+          This blueprint matches the university Android Lab project syllabus requirements. Everything demonstrated in this website directly maps to native Java Android components.
+        </p>
+
+        <div class="lab-card">
+          <h4 style="font-size: 0.95rem; font-weight: 700; color: var(--primary); margin-bottom: 6px;">
+            1. Lab Syllabus Concepts & Implementation Map
+          </h4>
+          <ul style="font-size: 0.8rem; padding-left: 20px; line-height: 1.6;">
+            <li><strong>Multiple Activities:</strong> SplashActivity, MainActivity, AddEditPetActivity, PetDetailsActivity, HealthActivity, DailyCareActivity, NearbyVetsActivity, SettingsActivity.</li>
+            <li><strong>Explicit & Implicit Intents:</strong> Opening screens with extras, Camera/Gallery image picker intent, Dial vet intent (`ACTION_DIAL`), Share pet health record (`ACTION_SEND`).</li>
+            <li><strong>SQLite Database & DAOs:</strong> `DatabaseHelper` extending `SQLiteOpenHelper` with ON DELETE CASCADE foreign keys. Separate DAO classes: `PetDao`, `FeedingDao`, `HealthRecordDao`, `CareLogDao`.</li>
+            <li><strong>Notifications & Alarms:</strong> `NotificationChannel`, `AlarmManager` with `setExactAndAllowWhileIdle()`, and `ReminderReceiver` extending `BroadcastReceiver`.</li>
+            <li><strong>Boot Receiver:</strong> `BootReceiver` listening for `ACTION_BOOT_COMPLETED` to reschedule alarms after device restart.</li>
+            <li><strong>SharedPreferences:</strong> Saving dark mode preferences, notification toggles, and emergency vet contacts via `PrefsManager`.</li>
+            <li><strong>Retrofit (Optional Online):</strong> `VetApiService` interface and `ApiClient` to fetch nearby vet clinics asynchronously.</li>
+            <li><strong>Testing:</strong> JUnit unit tests for Date/Model utilities, and Espresso tests for UI workflows.</li>
+          </ul>
+        </div>
+
+        <div class="lab-card">
+          <h4 style="font-size: 0.95rem; font-weight: 700; color: var(--secondary); margin-bottom: 6px;">
+            2. SQLite Database Schema
+          </h4>
+          <div class="code-snippet">
+CREATE TABLE pets (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    species TEXT NOT NULL,
+    breed TEXT,
+    age TEXT,
+    weight REAL,
+    photo_uri TEXT,
+    notes TEXT
+);
+
+CREATE TABLE feeding_schedule (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    pet_id INTEGER NOT NULL,
+    meal_name TEXT NOT NULL,
+    time TEXT NOT NULL,
+    instructions TEXT,
+    enabled INTEGER DEFAULT 1,
+    FOREIGN KEY(pet_id) REFERENCES pets(id) ON DELETE CASCADE
+);
+
+CREATE TABLE health_records (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    pet_id INTEGER NOT NULL,
+    type TEXT NOT NULL,
+    title TEXT NOT NULL,
+    date TEXT NOT NULL,
+    next_due_date TEXT,
+    notes TEXT,
+    FOREIGN KEY(pet_id) REFERENCES pets(id) ON DELETE CASCADE
+);
+
+CREATE TABLE care_logs (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    pet_id INTEGER NOT NULL,
+    activity TEXT NOT NULL,
+    date_time TEXT NOT NULL,
+    completed INTEGER DEFAULT 1,
+    FOREIGN KEY(pet_id) REFERENCES pets(id) ON DELETE CASCADE
+);</div>
+        </div>
+
+        <div class="lab-card">
+          <h4 style="font-size: 0.95rem; font-weight: 700; color: var(--accent-amber); margin-bottom: 6px;">
+            3. Master Android Studio Prompt
+          </h4>
+          <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 8px;">
+            The complete prompt and full file tree are also saved in <code>ANDROID_PROMPT_AND_STRUCTURE.md</code> in this project folder!
+          </p>
+          <button class="btn btn-sm btn-secondary" onclick="navigator.clipboard.writeText('See ANDROID_PROMPT_AND_STRUCTURE.md in the project root'); window.PawPalNotifications.showToast({title:'Prompt Ready', message:'Refer to ANDROID_PROMPT_AND_STRUCTURE.md for the full ready-to-use prompt!', type:'info'});">
+            Copy Reference Notice
+          </button>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary modal-close-btn">Close Blueprint</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Print Passport Container (Hidden until Print) -->
+  <div id="print-health-report" style="display:none;"></div>
+
+  <!-- Main Application Logic (ES Modules) -->
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,19 @@
+{
+  "name": "pawpal-pet-care-manager",
+  "version": "1.0.0",
+  "description": "PawPal - Pet Care Manager Web Application & Future Android Companion",
+  "main": "index.html",
+  "scripts": {
+    "start": "npx serve -l 3000",
+    "serve": "python -m http.server 3000"
+  },
+  "keywords": [
+    "pet-care",
+    "wellness",
+    "vaccination-tracker",
+    "feeding-reminder",
+    "android-ready"
+  ],
+  "author": "PawPal Team",
+  "license": "MIT"
+}
